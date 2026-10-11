@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SoberScale — BAC Estimator: Blood Alcohol Calculator & Sober-By Time</title>
+<meta name="description" content="Free blood alcohol (BAC) estimator using the Widmark formula. Add drinks, weight and time to estimate BAC, see the hourly decay and when you are likely sober. Estimates only — never drive on an estimate.">
+<link rel="canonical" href="https://soberscale.fixoraa.tech/">
+<meta property="og:title" content="SoberScale — BAC Estimator: Blood Alcohol Calculator & Sober-By Time">
+<meta property="og:description" content="Free blood alcohol (BAC) estimator using the Widmark formula. Add drinks, weight and time to estimate BAC, see the hourly decay and when you are likely sober. Estimates only — never drive on an estimate.">
+<meta property="og:url" content="https://soberscale.fixoraa.tech/">
+<meta property="og:type" content="website">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{--pri:#6D28D9;--acc:#F59E0B;--bgc:#F5F3FF}
+body{background:var(--bgc);font-family:'Segoe UI',system-ui,sans-serif}
+.pri{background:var(--pri)} .prit{color:var(--pri)} .acct{color:var(--acc)}
+.btn{background:var(--pri);color:#fff;padding:.6rem 1.2rem;border-radius:.6rem;font-weight:600;cursor:pointer;border:none}
+.btn:hover{opacity:.9} .btn2{background:var(--acc);color:#111;padding:.6rem 1.2rem;border-radius:.6rem;font-weight:600;cursor:pointer;border:none}
+input,select,textarea{border:1.5px solid #cbd5e1;border-radius:.55rem;padding:.55rem .7rem;width:100%;background:#fff;color:#0f172a}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--pri);border-color:transparent}
+label{font-size:.83rem;font-weight:600;display:block;margin-bottom:.3rem}
+.card{background:#fff;border-radius:1rem;box-shadow:0 8px 30px rgba(15,23,42,.08);padding:1.4rem}
+article p{margin:.7rem 0;line-height:1.75;color:#334155}
+article h2{font-size:1.45rem;font-weight:800;margin:1.6rem 0 .4rem;color:#0f172a}
+.faq{background:#fff;border-radius:.7rem;padding:.9rem 1.1rem;margin:.55rem 0;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.faq summary{font-weight:700;cursor:pointer}
+table.dt{width:100%;border-collapse:collapse} table.dt th,table.dt td{border:1px solid #e2e8f0;padding:.45rem .6rem;text-align:left;font-size:.9rem}
+table.dt th{background:#f1f5f9}
+
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "SoberScale", "url": "https://soberscale.fixoraa.tech/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Free blood alcohol (BAC) estimator using the Widmark formula. Add drinks, weight and time to estimate BAC, see the hourly decay and when you are likely sober. Estimates only \u2014 never drive on an estimate."}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How accurate is this BAC estimate?", "acceptedAnswer": {"@type": "Answer", "text": "It uses the standard Widmark formula, but individual metabolism varies by \u00b120% or more with food, medication, fatigue and genetics. Treat the result as an educational estimate \u2014 it can never certify that you are safe or legal to drive."}}, {"@type": "Question", "name": "How long until I am sober after drinking?", "acceptedAnswer": {"@type": "Answer", "text": "Alcohol clears at roughly 0.015% BAC per hour, and nothing speeds it. The estimator shows your decay hour by hour and the estimated time to zero \u2014 which for a heavy evening is often late the next morning."}}, {"@type": "Question", "name": "Why do two drinks affect people differently?", "acceptedAnswer": {"@type": "Answer", "text": "BAC depends on grams of alcohol, body weight and body-water proportion (the Widmark factor differs by sex), plus food and individual metabolism. The same two glasses can produce nearly double the BAC in a lighter person."}}, {"@type": "Question", "name": "Does coffee or food sober me up?", "acceptedAnswer": {"@type": "Answer", "text": "Food before drinking slows absorption and lowers the peak; coffee only makes you feel alert \u2014 it does not lower BAC at all. Time is the only mechanism that reduces it."}}, {"@type": "Question", "name": "What is the legal driving limit?", "acceptedAnswer": {"@type": "Answer", "text": "It varies: about 0.03% in India, 0.05% across most of the EU and Australia, 0.08% in the UK and North America, and effectively zero for novices and commercial drivers in many places. The only universally safe limit is not drinking when you will drive."}}, {"@type": "Question", "name": "Can I use this to decide whether to drive?", "acceptedAnswer": {"@type": "Answer", "text": "No \u2014 that is the one job it must never do. If you have been drinking, do not drive, whatever the estimate says. Use it for education and for planning transport in advance."}}]}</script>
+</head>
+<body id="top">
+<header class="sticky top-0 z-40 shadow-md" style="background:#2E1065">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-3 flex items-center justify-between">
+    <a href="#top" class="text-xl font-extrabold tracking-tight" style="color:#F5F3FF">⚖ SoberScale</a>
+    <nav class="flex gap-5 text-sm font-semibold" style="color:#F5F3FF">
+      <a href="#top" class="hover:underline">Home</a>
+      <a href="https://fixoraa.tech" class="hover:underline">More Tools</a>
+    </nav>
+  </div>
+</header>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+<main class="mx-auto max-w-6xl px-4 sm:px-6 py-8">
+  <div class="text-center mb-6">
+    <h1 class="text-3xl sm:text-4xl font-extrabold" style="color:#0f172a">Blood Alcohol (BAC) Estimator</h1>
+    <p class="mt-2 text-slate-600 max-w-2xl mx-auto">Add your drinks, your weight and the time elapsed — SoberScale applies the Widmark formula to estimate your blood alcohol concentration, shows its hourly decay, and estimates when you reach zero. An estimate is never a permission to drive.</p>
+    <span class="inline-block mt-3 px-3 py-1 rounded-full text-xs font-bold text-white pri">✓ Unlimited Free Usage — No Signup, No Watermark</span>
+  </div>
+  <div class="grid md:grid-cols-5 gap-6">
+  <div class="card md:col-span-2 space-y-3">
+    <div><label>Body weight (kg)</label><input id="w" type="number" value="70"></div>
+    <div><label>Body type (Widmark factor)</label><select id="sex"><option value="male">Male (r=0.68)</option><option value="female">Female (r=0.55)</option></select></div>
+    <div><label>Hours since first drink</label><input id="hrs" type="number" step="0.5" value="1"></div>
+    <div><label>Add a drink</label><select id="drink"><option value="330,5">Beer 330ml · 5%</option><option value="150,12">Wine 150ml · 12%</option><option value="45,40">Spirit 45ml · 40%</option><option value="500,5">Beer pint 500ml · 5%</option><option value="250,12">Wine large 250ml · 12%</option><option value="330,8">Strong beer 330ml · 8%</option></select></div>
+    <button class="btn w-full" onclick="addDrink()">+ Add drink</button>
+    <div id="drinkList" class="text-sm"></div>
+    <button class="btn2 w-full" onclick="resetDrinks()">Reset drinks</button>
+  </div>
+  <div class="card md:col-span-3">
+    <div class="text-center"><div class="text-sm font-bold">ESTIMATED BAC NOW</div><div id="bac" class="text-6xl font-extrabold prit">0.000%</div><div id="sober" class="font-semibold mt-1"></div></div>
+    <div id="decay" class="mt-4 space-y-1"></div>
+    <table class="dt mt-4"><tr><th>Jurisdiction (typical limit)</th><th>Limit</th></tr><tr><td>India</td><td>0.03%</td></tr><tr><td>UK (England & Wales) / USA / Canada</td><td>0.08%</td></tr><tr><td>Most of EU / Australia</td><td>0.05%</td></tr><tr><td>Several EU states, commercial & novice drivers in many countries</td><td>0.00–0.02%</td></tr></table>
+    <p class="text-xs text-slate-500 mt-2">Widmark estimates vary widely with food, medication, fatigue and individual metabolism (±20% or more). The only safe BAC for driving is one you never test. If in doubt: do not drive.</p>
+  </div></div>
+</main>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="464498"></script>
+    </div>
+  </div>
+</div>
+<section class="mx-auto max-w-4xl px-4 sm:px-6 pb-6">
+  <article>
+  <h2>What BAC actually measures</h2>
+<p>Blood alcohol concentration is the share of your blood, by volume, that is pure ethanol — 0.08% means eight-hundredths of one percent of your blood is alcohol. It sounds tiny until you remember what alcohol does at those dilutions: at 0.02–0.03% judgement and divided attention measurably slip; by 0.05% coordination and tracking degrade; at 0.08% — the legal limit in the UK, US and Canada — crash risk is several times baseline; India sets its limit stricter, at 0.03%. SoberScale estimates where you sit on that curve from the three variables that drive it: how much pure alcohol you drank, the body water available to dilute it, and time — the only exit alcohol has.</p>
+<p>The estimator uses the Widmark formula, the 1932 workhorse still taught in forensic science: alcohol grams divided by body weight times a distribution factor (about 0.68 for men, 0.55 for women, reflecting average body-water proportions), converted to a percentage, minus roughly 0.015% per hour of metabolism. Your liver clears alcohol at a remarkably constant rate — coffee, cold air, willpower and embarrassment do not speed it; they merely make an impaired person feel alert, which is the most dangerous combination on the road.</p>
+<h2>Grams, not glasses: counting what you actually drank</h2>
+<p>'I only had two drinks' conceals everything that matters, because a drink is not a unit. A 330ml beer at 5% carries about 13 grams of pure alcohol; a large 250ml glass of 12% wine carries nearly 24 — almost a double. A 45ml pour of 40% spirit lands near 14. Home pours routinely exceed the measures in the preset list, craft beers double the strength of lagers, and cocktails stack spirits invisibly. SoberScale's presets exist to force the honest conversion — volume times strength times alcohol's density — because BAC responds to grams, not to glassware or intentions.</p>
+<p>Food deserves its footnote: eating before and while drinking slows absorption, lowering and delaying the peak, sometimes substantially. The estimator assumes a middle path and says so. If you drank on an empty stomach, treat your true BAC as higher and earlier than the estimate; the estimate is a floor for your caution, never a ceiling for your confidence.</p>
+<h2>Why the estimate can never clear you to drive</h2>
+<p>Every BAC calculator, this one included, models an average body — and you are not average. Metabolism varies with genetics, sex hormones, medication, liver health, fatigue and a dozen other factors; forensic literature puts individual error easily at ±20 percent, and wider at the tails. A reading of '0.04%, legal in most of Europe' can be 0.06% in your actual blood — and illegal in India, and impairing anywhere. Laws add their own trap: limits differ by country, by licence class, and for professional drivers, often to zero. The table beside the calculator shows the spread precisely so the conclusion draws itself.</p>
+<p>So what is the estimator for? Education and planning: understanding why two glasses of wine outrank three light beers; seeing, in the decay chart, that a heavy evening needs until morning — often late morning — to clear; recognising that 'I feel fine' at hour two and 'the maths says zero at hour nine' describe the same body. Use it the night before to plan the ride, not at the kerb to argue with arithmetic. The only BAC that guarantees a safe, legal drive is the one produced by not drinking at all when you will drive.</p>
+<h2>The decay curve: time is the only cure</h2>
+<p>The hourly chart is the most honest picture on this page: a slow, straight, unbribable line. Roughly 0.015% per hour — about one standard drink's worth every hour and a half for an average adult — leaves whether you sleep, shower, feast or fret. Sleep helps only by passing time without adding drinks, which is also its trap: six hours of sleep after a heavy session can still leave a morning BAC that is illegal in stricter countries and impairing in all of them. 'Morning-after' offences are a substantial, sorrowful category of drink-driving statistics, committed by people who genuinely believed the night had ended the matter.</p>
+<p>Plan backwards from the curve. If the estimate says zero at 11:00, the car stays parked until 11:00 — and breakfast, keys and confidence wait with it. Build the sober window into the evening itself: alternate drinks with water, stop earlier than the party does, and arrange the ride before the first glass, when your judgement about the last glass is still fully staffed.</p>
+<h2>Reading the limits table like a traveller</h2>
+<p>Limits are law, not physiology, and they vary because societies weigh the same evidence differently. India's 0.03% reflects a strict stance; the 0.05% band across most of Europe and Australia sits mid-range; 0.08% in Britain and North America is the permissive end — and several countries, plus novice and commercial drivers in many more, are held to effectively zero. Crossing a border can halve your legal limit without your body noticing any difference. The traveller's rule that survives every jurisdiction is the one this page keeps repeating: when you will drive, the target is not 'under the local limit' — it is zero drinks.</p>
+<p>If this estimator has a philosophy, it is that numbers defuse the two great liars of a drinking evening — 'it was only a couple' and 'I feel totally fine'. Grams and hours do not flatter. Put them in, read the line, and let the arithmetic make the decision your future self would thank you for.</p>
+<h2>A final, non-negotiable note</h2>
+<p>SoberScale is an educational estimator, not a breathalyser, not a medical device and not legal evidence. If you have been drinking and the question 'can I drive?' is live, it has already answered itself: no — call a cab, a friend or a rideshare, and let the car sleep it off too. No calculator error bar is worth a life, a licence or a family. The maths above is offered so that decision gets easier to make early, when it is cheap — ideally before the first drink, always before the last.</p>
+<h2>Planning the evening backwards</h2>
+<p>The decay arithmetic suggests a kinder way to plan a night out: decide the morning first. If you must drive at 8:00, count backwards at 0.015% an hour from the BAC your evening will plausibly reach, and you will find the honest last-drink time — it is almost always earlier than the party's. Share the plan while sober: a designated driver chosen at the start is a hero; one negotiated at the end is a compromise. Alternating each alcoholic drink with a full glass of water roughly halves the evening's peak for most people and costs nothing but a little smugness, which, by the third round, everyone has earned.</p>
+<p>And if the plan collapses — plans do — collapse it safely: rideshares, a sofa, a taxi charged to tomorrow's regret budget. The curve on this page never negotiates, but it also never judges; it simply keeps counting down, at its unhurried fifteenth-of-a-percent, until the number reaches zero and the evening is finally, fully over.</p>
+<h2>Hosts, friends and the arithmetic of care</h2>
+<p>The estimator has a social use beyond the drinker: it lets a host plan like an adult. If guests arrive at seven and the curve says a typical evening's drinks clear near dawn, the spare bedding, the taxi numbers on the fridge and the coffee at midnight stop being fussiness and become logistics. Friends use the same arithmetic in reverse — 'your estimate says 4 a.m.; the sofa says now' is a sentence that has ended many arguments kindly. Numbers defuse what concern alone cannot, because they accuse nobody: the curve is the curve, for the host, the guest and the reader alike. Keep it that impersonal, and it will keep being useful.</p>
+  <h2>Frequently Asked Questions</h2>
+  <details class="faq"><summary>How accurate is this BAC estimate?</summary><p>It uses the standard Widmark formula, but individual metabolism varies by ±20% or more with food, medication, fatigue and genetics. Treat the result as an educational estimate — it can never certify that you are safe or legal to drive.</p></details>
+<details class="faq"><summary>How long until I am sober after drinking?</summary><p>Alcohol clears at roughly 0.015% BAC per hour, and nothing speeds it. The estimator shows your decay hour by hour and the estimated time to zero — which for a heavy evening is often late the next morning.</p></details>
+<details class="faq"><summary>Why do two drinks affect people differently?</summary><p>BAC depends on grams of alcohol, body weight and body-water proportion (the Widmark factor differs by sex), plus food and individual metabolism. The same two glasses can produce nearly double the BAC in a lighter person.</p></details>
+<details class="faq"><summary>Does coffee or food sober me up?</summary><p>Food before drinking slows absorption and lowers the peak; coffee only makes you feel alert — it does not lower BAC at all. Time is the only mechanism that reduces it.</p></details>
+<details class="faq"><summary>What is the legal driving limit?</summary><p>It varies: about 0.03% in India, 0.05% across most of the EU and Australia, 0.08% in the UK and North America, and effectively zero for novices and commercial drivers in many places. The only universally safe limit is not drinking when you will drive.</p></details>
+<details class="faq"><summary>Can I use this to decide whether to drive?</summary><p>No — that is the one job it must never do. If you have been drinking, do not drive, whatever the estimate says. Use it for education and for planning transport in advance.</p></details>
+  </article>
+</section>
+<footer class="mt-6 py-8" style="background:#2E1065;color:#F5F3FF">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 text-center text-sm">
+    <p class="font-bold text-base">SoberScale</p>
+    <p class="opacity-80 mt-1">Free blood alcohol (BAC) estimator using the Widmark formula. Add drinks, weight and time to estimate BAC, see the hourly decay and when you are likely sober. Estimates only — never drive on an estimate.</p>
+    <p class="mt-2"><a href="#top" class="underline">Home</a> · <a href="https://fixoraa.tech" class="underline">More Tools</a></p>
+    <p class="fx-credit" style="text-align:center;font-size:12.5px;opacity:.62;margin:10px auto 2px;letter-spacing:.01em">Made by <a href="https://fixoraa.tech" target="_blank" rel="noopener" style="color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px">Fixoraa</a></p>
+  </div>
+</footer>
+<script id="lib-soberscale">
+
+function estimateBAC(drinksMlAlcohol, weightKg, sex, hoursElapsed){
+  // Widmark: BAC(%) = alcohol(g) / (r * weight kg) / 10 ... using g/L: A/(r*W) gives g/L; % = g/L /10
+  var alcoholG = drinksMlAlcohol; // caller passes grams of pure alcohol
+  var r = sex==='female' ? 0.55 : 0.68;
+  var bacGL = alcoholG/(r*weightKg);
+  var bac = bacGL/10; // percent
+  bac = Math.max(0, bac - 0.015*hoursElapsed); // ~0.015%/hr elimination
+  var hoursToZero = bac>0 ? bac/0.015 : 0;
+  return {bac:Math.round(bac*1000)/1000, hoursToZero:Math.round(hoursToZero*10)/10, grams:alcoholG};
+}
+function drinkGrams(volumeMl, abvPct){ return Math.round(volumeMl*abvPct/100*0.789*10)/10; }
+if (typeof module!=="undefined") module.exports={estimateBAC:estimateBAC, drinkGrams:drinkGrams};
+
+</script>
+<script>
+
+var DRINKS=[];
+function addDrink(){var v=document.getElementById('drink').value.split(',');DRINKS.push({label:document.getElementById('drink').selectedOptions[0].textContent,ml:+v[0],abv:+v[1]});render();}
+function resetDrinks(){DRINKS=[];render();}
+function render(){
+  var grams=DRINKS.reduce(function(a,d){return a+drinkGrams(d.ml,d.abv);},0);
+  document.getElementById('drinkList').innerHTML=DRINKS.length?DRINKS.map(function(d,i){return '<div class="bg-violet-50 rounded px-2 py-1 mb-1 flex justify-between"><span>'+d.label+'</span><b>'+drinkGrams(d.ml,d.abv)+' g</b></div>';}).join('')+'<div class="font-bold">Total pure alcohol: '+grams.toFixed(1)+' g</div>':'<span class="text-slate-400">No drinks added yet.</span>';
+  var w=+document.getElementById('w').value||70, sex=document.getElementById('sex').value, hrs=+document.getElementById('hrs').value||0;
+  var r=estimateBAC(grams,w,sex,hrs);
+  document.getElementById('bac').textContent=r.bac.toFixed(3)+'%';
+  document.getElementById('sober').textContent= r.bac<=0?'You are at zero on this estimate.':('Estimated time to zero from now: ~'+r.hoursToZero+' hours. Legal limits are far below zero — see the table; most are crossed long before you feel sober.');
+  var rows=''; for(var h=0;h<=6;h++){var b=estimateBAC(grams,w,sex,hrs+h); if(h>0&&b.bac<=0&&estimateBAC(grams,w,sex,hrs+h-1).bac<=0)break; rows+='<div class="text-sm">+'+h+'h <span class="inline-block h-3 rounded" style="background:#6D28D9;width:'+Math.min(100,b.bac/0.2*100)+'%"></span> '+b.bac.toFixed(3)+'%</div>';}
+  document.getElementById('decay').innerHTML=rows;
+}
+['w','sex','hrs'].forEach(function(id){document.getElementById(id).addEventListener('input',render);});
+render();
+
+</script>
+</body>
+</html>
